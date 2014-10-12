@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="10dp"
+        android:id="@+id/country_picker_player_name"/>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:gravity="center"
+        android:padding="10dp"
+        android:layout_height="wrap_content"
+        android:text="@string/country_picker_select_country"/>
+
+    <Button
+        android:layout_width="fill_parent"
+        android:padding="10dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/country_picker_pick_random_country"
+        android:id="@+id/country_picker_pick_random" />
+
+
+    <!--<android.support.v7.widget.RecyclerView-->
+        <!--android:id="@+id/country_picker_available_countries"-->
+        <!--android:scrollbars="vertical"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"/>-->
+
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent" android:id="@+id/country_picker_countries_list">
+        </ListView>
+
+
+</LinearLayout>

@@ -80,7 +80,7 @@ public class WelcomeActivity extends CastHelperActivity {
             Player player = new Player(playerName);
             _playerService.storePlayer(player);
             _playerService.registerPlayer(player);
-            startActivity(new Intent(this, LobbyActivity.class));
+            startActivity(new Intent(this, CountryPickerActivity.class));
         }
 
 

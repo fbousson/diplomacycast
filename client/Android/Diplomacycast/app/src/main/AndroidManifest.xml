@@ -27,9 +27,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
+
+
+        <activity android:name=".CountryPickerActivity"></activity>
         <activity android:name=".LobbyActivity"></activity>
-        
+
+
 
         <activity android:name=".SampleHelloWorld"  android:screenOrientation="portrait"/>
 

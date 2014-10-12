@@ -21,5 +21,7 @@
     <string name="instructions">Talk to me</string>
     <string name="connect">Connect</string>
     <string name="lobby_welcome_message">Welcome to the lobby</string>
+    <string name="country_picker_select_country">Please either select a country or choose random</string>
+    <string name="country_picker_pick_random_country">Random</string>
 
 </resources>
