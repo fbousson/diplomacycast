@@ -10,6 +10,8 @@
 
     <string name="diplomacycast_islive">Diplomacy cast is now live!</string>
 
+    <string name="lobbyactivity_player_name_hint">Fill in your player name</string>
+
 
     <!--used in hello chromecast sample -->
     <string name="app_id">794B7BBF</string>
@@ -17,5 +19,7 @@
     <string name="message_to_cast">Message to Cast&#8230;</string>
     <string name="media_route_menu_title">Play on&#8230;</string>
     <string name="instructions">Talk to me</string>
+    <string name="connect">Connect</string>
+    <string name="lobby_welcome_message">Welcome to the lobby</string>
 
 </resources>
