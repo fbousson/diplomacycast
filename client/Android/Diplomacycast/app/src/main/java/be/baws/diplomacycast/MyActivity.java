@@ -1,13 +1,14 @@
 package be.baws.diplomacycast;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import be.baws.diplomacycast.activity.CastHelperActivity;
 
-public class MyActivity extends Activity {
+
+public class MyActivity extends CastHelperActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -15,13 +16,11 @@ public class MyActivity extends Activity {
         setContentView(R.layout.activity_my);
     }
 
-
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.my, menu);
-        return true;
+    protected int getMenuToInflate() {
+       return R.menu.menu_myactivity;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

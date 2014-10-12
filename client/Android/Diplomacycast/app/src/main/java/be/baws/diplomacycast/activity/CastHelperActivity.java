@@ -1,13 +1,9 @@
-package be.baws.diplomacycast;
-
+package be.baws.diplomacycast.activity;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
-import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.speech.RecognizerIntent;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -18,15 +14,11 @@ import android.support.v7.media.MediaRouter.RouteInfo;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.cast.ApplicationMetadata;
 import com.google.android.gms.cast.Cast;
 import com.google.android.gms.cast.Cast.ApplicationConnectionResult;
-import com.google.android.gms.cast.Cast.MessageReceivedCallback;
 import com.google.android.gms.cast.CastDevice;
 import com.google.android.gms.cast.CastMediaControlIntent;
 import com.google.android.gms.common.ConnectionResult;
@@ -34,14 +26,16 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
+import be.baws.diplomacycast.R;
+import be.baws.diplomacycast.channel.DiplomacyCastChannel;
+
 /**
  * Created by fbousson on 12/10/14.
  */
-public class SampleHelloWorld extends ActionBarActivity {
+public abstract class CastHelperActivity extends ActionBarActivity {
 
-    private static final String TAG = SampleHelloWorld.class.getSimpleName();
+    private static final String TAG = CastHelperActivity.class.getSimpleName();
 
-    private static final int REQUEST_CODE = 1;
 
     private MediaRouter mMediaRouter;
     private MediaRouteSelector mMediaRouteSelector;
@@ -51,10 +45,12 @@ public class SampleHelloWorld extends ActionBarActivity {
     private Cast.Listener mCastListener;
     private ConnectionCallbacks mConnectionCallbacks;
     private ConnectionFailedListener mConnectionFailedListener;
-    private HelloWorldChannel mHelloWorldChannel;
+    private DiplomacyCastChannel _diplomacyCastChannel;
     private boolean mApplicationStarted;
     private boolean mWaitingForReconnect;
     private String mSessionId;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,55 +61,17 @@ public class SampleHelloWorld extends ActionBarActivity {
         actionBar.setBackgroundDrawable(new ColorDrawable(
                 android.R.color.transparent));
 
-        // When the user clicks on the button, use Android voice recognition to
-        // get text
-        Button voiceButton = (Button) findViewById(R.id.voiceButton);
-        voiceButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startVoiceRecognitionActivity();
-            }
-        });
-
         // Configure Cast device discovery
         mMediaRouter = MediaRouter.getInstance(getApplicationContext());
         mMediaRouteSelector = new MediaRouteSelector.Builder()
                 .addControlCategory(
                         CastMediaControlIntent.categoryForCast(getResources()
-                                .getString(R.string.app_id))).build();
+                                .getString(R.string.diplomacycast_applicationid))).build();
         mMediaRouterCallback = new MyMediaRouterCallback();
     }
 
-    /**
-     * Android voice recognition
-     */
-    private void startVoiceRecognitionActivity() {
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
-                getString(R.string.message_to_cast));
-        startActivityForResult(intent, REQUEST_CODE);
-    }
 
-    /*
-     * Handle the voice recognition response
-     *
-     * @see android.support.v4.app.FragmentActivity#onActivityResult(int, int,
-     * android.content.Intent)
-     */
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
-            ArrayList<String> matches = data
-                    .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-            if (matches.size() > 0) {
-                Log.d(TAG, matches.get(0));
-                sendMessage(matches.get(0));
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
+
 
     @Override
     protected void onResume() {
@@ -139,15 +97,14 @@ public class SampleHelloWorld extends ActionBarActivity {
     }
 
 
-
+    protected abstract int getMenuToInflate();
 
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(getMenuToInflate(), menu);
         MenuItem mediaRouteMenuItem = menu.findItem(R.id.media_route_menu_item);
         MediaRouteActionProvider mediaRouteActionProvider = (MediaRouteActionProvider) MenuItemCompat
                 .getActionProvider(mediaRouteMenuItem);
@@ -239,8 +196,8 @@ public class SampleHelloWorld extends ActionBarActivity {
                         try {
                             Cast.CastApi.setMessageReceivedCallbacks(
                                     mApiClient,
-                                    mHelloWorldChannel.getNamespace(),
-                                    mHelloWorldChannel);
+                                    _diplomacyCastChannel.getNamespace(),
+                                    _diplomacyCastChannel);
                         } catch (IOException e) {
                             Log.e(TAG, "Exception while creating channel", e);
                         }
@@ -249,7 +206,7 @@ public class SampleHelloWorld extends ActionBarActivity {
                     // Launch the receiver app
                     Cast.CastApi
                             .launchApplication(mApiClient,
-                                    getString(R.string.app_id), false)
+                                    getString(R.string.diplomacycast_applicationid), false)
                             .setResultCallback(
                                     new ResultCallback<Cast.ApplicationConnectionResult>() {
                                         @Override
@@ -282,14 +239,14 @@ public class SampleHelloWorld extends ActionBarActivity {
 
                                                 // Create the custom message
                                                 // channel
-                                                mHelloWorldChannel = new HelloWorldChannel();
+                                                _diplomacyCastChannel = new DiplomacyCastChannel(getString(R.string.diplomacycast_namespace));
                                                 try {
                                                     Cast.CastApi
                                                             .setMessageReceivedCallbacks(
                                                                     mApiClient,
-                                                                    mHelloWorldChannel
+                                                                    _diplomacyCastChannel
                                                                             .getNamespace(),
-                                                                    mHelloWorldChannel);
+                                                                    _diplomacyCastChannel);
                                                 } catch (IOException e) {
                                                     Log.e(TAG,
                                                             "Exception while creating channel",
@@ -298,7 +255,7 @@ public class SampleHelloWorld extends ActionBarActivity {
 
                                                 // set the initial instructions
                                                 // on the receiver
-                                                sendMessage(getString(R.string.instructions));
+                                                sendMessage(getString(R.string.diplomacycast_islive));
                                             } else {
                                                 Log.e(TAG,
                                                         "application could not launch");
@@ -342,11 +299,11 @@ public class SampleHelloWorld extends ActionBarActivity {
                 if (mApiClient.isConnected()  || mApiClient.isConnecting()) {
                     try {
                         Cast.CastApi.stopApplication(mApiClient, mSessionId);
-                        if (mHelloWorldChannel != null) {
+                        if (_diplomacyCastChannel != null) {
                             Cast.CastApi.removeMessageReceivedCallbacks(
                                     mApiClient,
-                                    mHelloWorldChannel.getNamespace());
-                            mHelloWorldChannel = null;
+                                    _diplomacyCastChannel.getNamespace());
+                            _diplomacyCastChannel = null;
                         }
                     } catch (IOException e) {
                         Log.e(TAG, "Exception while removing channel", e);
@@ -368,10 +325,10 @@ public class SampleHelloWorld extends ActionBarActivity {
      * @param message
      */
     private void sendMessage(String message) {
-        if (mApiClient != null && mHelloWorldChannel != null) {
+        if (mApiClient != null && _diplomacyCastChannel != null) {
             try {
                 Cast.CastApi.sendMessage(mApiClient,
-                        mHelloWorldChannel.getNamespace(), message)
+                        _diplomacyCastChannel.getNamespace(), message)
                         .setResultCallback(new ResultCallback<Status>() {
                             @Override
                             public void onResult(Status result) {
@@ -384,32 +341,11 @@ public class SampleHelloWorld extends ActionBarActivity {
                 Log.e(TAG, "Exception while sending message", e);
             }
         } else {
-            Toast.makeText(SampleHelloWorld.this, message, Toast.LENGTH_SHORT)
+            Toast.makeText(CastHelperActivity.this, message, Toast.LENGTH_SHORT)
                     .show();
         }
     }
 
-    /**
-     * Custom message channel
-     */
-    class HelloWorldChannel implements MessageReceivedCallback {
 
-        /**
-         * @return custom namespace
-         */
-        public String getNamespace() {
-            return getString(R.string.namespace);
-        }
-
-        /*
-         * Receive message from the receiver app
-         */
-        @Override
-        public void onMessageReceived(CastDevice castDevice, String namespace,
-                                      String message) {
-            Log.d(TAG, "onMessageReceived: " + message);
-        }
-
-    }
 
 }

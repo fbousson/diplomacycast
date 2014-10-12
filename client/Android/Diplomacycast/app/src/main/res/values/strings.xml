@@ -5,8 +5,13 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_hellochromecast">Hello sample</string>
 
+    <string name="diplomacycast_applicationid">D3C95A06</string>
+    <string name="diplomacycast_namespace">urn:x-cast:be.baws.diplomacycast</string>
+
+    <string name="diplomacycast_islive">Diplomacy cast is now live!</string>
 
 
+    <!--used in hello chromecast sample -->
     <string name="app_id">794B7BBF</string>
     <string name="namespace">urn:x-cast:com.google.cast.sample.helloworld</string>
     <string name="message_to_cast">Message to Cast&#8230;</string>
