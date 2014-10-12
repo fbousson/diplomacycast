@@ -6,7 +6,9 @@
     <string name="action_hellochromecast">Hello sample</string>
 
     <string name="diplomacycast_applicationid">D3C95A06</string>
+    <string name="diplomacycast_namespace">urn:x-cast:be.baws.diplomacycast</string>
 
+    <string name="diplomacycast_islive">Diplomacy cast is now live!</string>
 
 
     <!--used in hello chromecast sample -->
