@@ -6,6 +6,8 @@
     <string name="action_hellochromecast">Hello sample</string>
 
 
+    <string name="hosting_page">www.googledrive.com/host/0B32aba2zgQQFNGVES0NwS29EVTQ</string>
+
 
     <string name="app_id">794B7BBF</string>
     <string name="namespace">urn:x-cast:com.google.cast.sample.helloworld</string>
