@@ -5,10 +5,11 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_hellochromecast">Hello sample</string>
 
+    <string name="diplomacycast_applicationid">D3C95A06</string>
 
-    <string name="hosting_page">www.googledrive.com/host/0B32aba2zgQQFNGVES0NwS29EVTQ</string>
 
 
+    <!--used in hello chromecast sample -->
     <string name="app_id">794B7BBF</string>
     <string name="namespace">urn:x-cast:com.google.cast.sample.helloworld</string>
     <string name="message_to_cast">Message to Cast&#8230;</string>
