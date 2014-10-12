@@ -9,6 +9,9 @@ public class Player implements Serializable{
 
     private String name;
 
+    public Player() {
+    }
+
     public Player(String name) {
         this.name = name;
     }
@@ -20,7 +23,6 @@ public class Player implements Serializable{
     public void setName(String name) {
         this.name = name;
     }
-
 
     @Override
     public boolean equals(Object o) {

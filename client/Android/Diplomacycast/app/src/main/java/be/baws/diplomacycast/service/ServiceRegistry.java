@@ -31,8 +31,6 @@ public class ServiceRegistry {
         _userSharedPreferences = new UserSharedPreferencesImpl(applicationContext);
         _playerService = new PlayerServiceImpl(_userSharedPreferences);
 
-
-
     }
 
     public static void initialize(Context applicationContext) {
@@ -40,7 +38,7 @@ public class ServiceRegistry {
     }
 
 
-
-
-
+    public PlayerService getPlayerService() {
+        return _playerService;
+    }
 }

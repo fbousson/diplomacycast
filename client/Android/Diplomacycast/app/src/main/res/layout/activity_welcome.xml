@@ -30,6 +30,7 @@
     <Button
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:enabled="false"
         android:id="@+id/lobby_connect_button"
         android:layout_gravity="center"
         android:padding="20dp"

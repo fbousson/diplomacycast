@@ -2,6 +2,8 @@ package be.baws.diplomacycast;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -9,6 +11,8 @@ import android.widget.EditText;
 
 import be.baws.diplomacycast.activity.CastHelperActivity;
 import be.baws.diplomacycast.domain.Player;
+import be.baws.diplomacycast.service.PlayerService;
+import be.baws.diplomacycast.service.ServiceRegistry;
 
 
 public class WelcomeActivity extends CastHelperActivity {
@@ -16,13 +20,37 @@ public class WelcomeActivity extends CastHelperActivity {
     private Button _connectButton;
     private EditText _playerNameEditText;
 
+
+    private PlayerService _playerService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
-        _playerNameEditText = (EditText)  findViewById(R.id.lobby_player_name_edit);
-        _connectButton = (Button) findViewById(R.id.lobby_connect_button);
+        _playerService = ServiceRegistry.getInstance().getPlayerService();
 
+
+        _playerNameEditText = (EditText)  findViewById(R.id.lobby_player_name_edit);
+        _playerNameEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+               _connectButton.setEnabled(s.length() > 0);
+
+            }
+        });
+
+
+        _connectButton = (Button) findViewById(R.id.lobby_connect_button);
         _connectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -30,6 +58,19 @@ public class WelcomeActivity extends CastHelperActivity {
             }
         });
 
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Player player = _playerService.retrieveLastKnownPlayer();
+        if(player == null){
+            _connectButton.setEnabled(false);
+        }else{
+            _connectButton.setEnabled(true);
+            _playerNameEditText.setText(player.getName());
+        }
     }
 
     private void validatePlayerName(String playerName) {
@@ -37,10 +78,9 @@ public class WelcomeActivity extends CastHelperActivity {
         //TODO validation logic.
         if(isValidPlayerName(playerName)){
             Player player = new Player(playerName);
-            //TODO add player to chromecast.
-            //TODO persist player to preferences.
-
-            startActivity(new Intent(this,LobbyActivity.class ));
+            _playerService.storePlayer(player);
+            _playerService.registerPlayer(player);
+            startActivity(new Intent(this, LobbyActivity.class));
         }
 
 
